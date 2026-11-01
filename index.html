@@ -1,0 +1,741 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SkillSync | AI Placement Matcher</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+
+        /* Smooth hover animations */
+
+.feature,
+.workflow-item {
+    transition: transform 0.3s ease,
+                border-color 0.3s ease,
+                box-shadow 0.3s ease;
+}
+
+.feature:hover {
+    transform: translateY(-7px);
+    border-color: rgba(86, 140, 255, 0.7);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+}
+
+.workflow-item {
+    padding: 20px;
+    border: 1px solid transparent;
+    border-radius: 11px;
+}
+
+.workflow-item:hover {
+    transform: translateY(-5px);
+    background: rgba(23, 38, 64, 0.65);
+    border-color: rgba(86, 140, 255, 0.35);
+}
+
+.workflow-item:hover .workflow-number {
+    color: #ffffff;
+    transform: scale(1.08);
+}
+
+.workflow-number {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+        :root {
+            --background: #0a1020;
+            --surface: #111c30;
+            --surface-light: #172640;
+            --blue: #568cff;
+            --blue-light: #8ab2ff;
+            --text: #f4f7ff;
+            --muted: #9aaac3;
+            --border: rgba(160, 185, 225, 0.13);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: var(--background);
+            color: var(--text);
+            font-family: 'DM Sans', sans-serif;
+            line-height: 1.6;
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .container {
+            width: min(1120px, 88%);
+            margin: auto;
+        }
+
+        /* NAVIGATION */
+
+        header {
+            height: 78px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            background: rgba(10, 16, 32, 0.9);
+        }
+
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .logo span {
+            color: var(--blue);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .nav-links a:hover {
+            color: white;
+        }
+
+        /* BUTTON */
+
+        .button {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 23px;
+            background: var(--blue);
+            color: white;
+            border-radius: 7px;
+            font-size: 14px;
+            font-weight: 700;
+            transition: 0.25s;
+        }
+
+        .button:hover {
+            background: #3975ed;
+            transform: translateY(-2px);
+        }
+
+        /* HERO */
+
+        .hero {
+            padding: 105px 0 100px;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            align-items: center;
+            gap: 70px;
+        }
+
+        .eyebrow {
+            color: var(--blue-light);
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 22px;
+        }
+
+        .hero h1 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(42px, 5vw, 63px);
+            line-height: 1.12;
+            letter-spacing: -2.5px;
+            max-width: 650px;
+        }
+
+        .hero h1 span {
+            color: var(--blue-light);
+        }
+
+        .hero-description {
+            color: var(--muted);
+            font-size: 16px;
+            max-width: 490px;
+            margin: 24px 0 32px;
+            line-height: 1.8;
+        }
+
+        .hero-note {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .status-dot {
+            height: 7px;
+            width: 7px;
+            background: #50d6a0;
+            border-radius: 50%;
+        }
+
+        /* PREVIEW CARD */
+
+        .preview {
+            background: linear-gradient(145deg, #172944, #101a2d);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            padding: 27px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.25);
+        }
+
+        .preview-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .preview-top h3 {
+            font-size: 15px;
+            font-weight: 600;
+        }
+
+        .preview-label {
+            color: var(--blue-light);
+            font-size: 10px;
+            background: rgba(86,140,255,0.12);
+            padding: 5px 9px;
+            border-radius: 20px;
+        }
+
+        .score-area {
+            display: flex;
+            align-items: center;
+            gap: 23px;
+            padding-bottom: 25px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .score-circle {
+            width: 105px;
+            height: 105px;
+            flex-shrink: 0;
+            border-radius: 50%;
+            display: grid;
+            place-items: center;
+            background: conic-gradient(
+                var(--blue) 0 78%,
+                #293b57 78% 100%
+            );
+            position: relative;
+        }
+
+        .score-circle::before {
+            content: "";
+            position: absolute;
+            width: 82px;
+            height: 82px;
+            background: #14233b;
+            border-radius: 50%;
+        }
+
+        .score-value {
+            position: relative;
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 25px;
+            font-weight: 700;
+        }
+
+        .score-info h4 {
+            font-size: 15px;
+            margin-bottom: 5px;
+        }
+
+        .score-info p {
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .skill-heading {
+            font-size: 12px;
+            color: var(--muted);
+            margin: 22px 0 12px;
+        }
+
+        .skill-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .skill {
+            padding: 6px 11px;
+            border-radius: 5px;
+            font-size: 11px;
+            background: rgba(86,140,255,0.12);
+            color: #a9c8ff;
+        }
+
+        .skill.missing {
+            background: rgba(255,180,90,0.10);
+            color: #ffc47e;
+        }
+
+        .preview-footer {
+            margin-top: 22px;
+            color: #8294b0;
+            font-size: 10px;
+        }
+
+        /* FEATURES */
+
+        .section {
+            padding: 82px 0;
+            border-top: 1px solid var(--border);
+        }
+
+        .section-heading {
+            margin-bottom: 38px;
+        }
+
+        .section-heading .eyebrow {
+            margin-bottom: 10px;
+        }
+
+        .section-heading h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 34px;
+            letter-spacing: -1px;
+        }
+
+        .section-heading p {
+            color: var(--muted);
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+        }
+
+        .feature {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            padding: 27px;
+            border-radius: 11px;
+            transition: 0.25s;
+        }
+
+        .feature:hover {
+            border-color: rgba(86,140,255,0.5);
+            transform: translateY(-4px);
+        }
+
+        .feature-icon {
+            width: 43px;
+            height: 43px;
+            display: grid;
+            place-items: center;
+            background: rgba(86,140,255,0.12);
+            color: var(--blue-light);
+            border-radius: 9px;
+            font-size: 20px;
+            margin-bottom: 21px;
+        }
+
+        .feature h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .feature p {
+            color: var(--muted);
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* HOW IT WORKS */
+
+        .workflow {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 35px;
+        }
+
+        .workflow-item {
+            position: relative;
+            padding-top: 16px;
+        }
+
+        .workflow-number {
+            color: var(--blue-light);
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+        }
+
+        .workflow-item h3 {
+            font-size: 16px;
+            margin-bottom: 9px;
+        }
+
+        .workflow-item p {
+            color: var(--muted);
+            font-size: 13px;
+            max-width: 290px;
+        }
+
+        /* FOOTER */
+
+        footer {
+            border-top: 1px solid var(--border);
+            padding: 25px 0;
+        }
+
+        .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #8292aa;
+            font-size: 12px;
+        }
+
+        /* RESPONSIVE */
+
+        @media (max-width: 850px) {
+            .hero {
+                grid-template-columns: 1fr;
+                gap: 45px;
+                padding: 75px 0;
+            }
+
+            .preview {
+                max-width: 500px;
+            }
+
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .workflow {
+                grid-template-columns: 1fr;
+                gap: 25px;
+            }
+        }
+
+        @media (max-width: 550px) {
+            header {
+                height: auto;
+                padding: 18px 0;
+            }
+
+            .nav {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .nav-links {
+                gap: 17px;
+                font-size: 12px;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .section-heading h2 {
+                font-size: 28px;
+            }
+
+            .score-area {
+                gap: 15px;
+            }
+
+            .score-circle {
+                width: 90px;
+                height: 90px;
+            }
+
+            .score-circle::before {
+                width: 70px;
+                height: 70px;
+            }
+
+            .footer-content {
+                flex-direction: column;
+                gap: 8px;
+                text-align: center;
+            }
+        }
+
+        .button {
+    transition: all 0.3s ease;
+}
+
+.button:hover {
+    background: #3975ed;
+    transform: translateY(-3px);
+    box-shadow: 0 0 25px rgba(86, 140, 255, 0.35);
+}
+
+.hero {
+    position: relative;
+    isolation: isolate;
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    width: 450px;
+    height: 450px;
+    right: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    background: radial-gradient(
+        circle,
+        rgba(56, 112, 230, 0.16),
+        transparent 70%
+    );
+    filter: blur(25px);
+    z-index: -1;
+    pointer-events: none;
+}
+.section {
+    padding: 85px 0;
+}
+
+.section-heading {
+    margin-bottom: 42px;
+}
+
+.feature-grid {
+    gap: 22px;
+}
+
+.workflow {
+    gap: 30px;
+}
+.nav-links a {
+    transition: color 0.25s ease;
+}
+
+.nav-links a:hover {
+    color: #8ab2ff;
+}
+
+.footer-text {
+    text-align: center;
+    color: #8292aa;
+    font-size: 12px;
+}
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="container nav">
+            <a href="#" class="logo">SkillSync<span>AI.</span></a>
+
+            <nav class="nav-links">
+                <a href="#features">Features</a>
+                <a href="#how-it-works">How it works</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+
+        <!-- HERO SECTION -->
+
+        <section class="container hero">
+
+            <div>
+                <div class="eyebrow">AI-powered placement assistant</div>
+
+                <h1>
+                    Your skills.<br>
+                    Your next <span>opportunity.</span>
+                </h1>
+
+                <p class="hero-description">
+                    Stop guessing whether you're ready for a job.
+                    SkillSync AI analyses your skills against real job
+                    requirements and helps you understand where you stand.
+                </p>
+
+                <a href="https://mb06.app.n8n.cloud/form/a1661d5e-dd37-44f4-8a28-89de91d1989a"
+                   class="button">
+                    Analyze My Placement Fit <span>→</span>
+                </a>
+
+                <div class="hero-note">
+                    <span class="status-dot"></span>
+                    Simple assessment. Personalised AI report.
+                </div>
+            </div>
+
+            <!-- VISUAL PREVIEW ONLY -->
+
+            <div class="preview">
+
+                <div class="preview-top">
+                    <h3>Placement Match Preview</h3>
+                    <span class="preview-label">SAMPLE</span>
+                </div>
+
+                <div class="score-area">
+
+                    <div class="score-circle">
+                        <span class="score-value">78%</span>
+                    </div>
+
+                    <div class="score-info">
+                        <h4>Skill Match Score</h4>
+                        <p>An illustrative example of a match result.</p>
+                    </div>
+
+                </div>
+
+                <div class="skill-heading">Example skill analysis</div>
+
+                <div class="skill-list">
+                    <span class="skill">Python</span>
+                    <span class="skill">SQL</span>
+                    <span class="skill">Data Analysis</span>
+                    <span class="skill">Excel</span>
+                    <span class="skill missing">Machine Learning</span>
+                    <span class="skill missing">AWS</span>
+                </div>
+
+                <div class="preview-footer">
+                    Sample interface · Not a live assessment
+                </div>
+
+            </div>
+
+        </section>
+
+        <!-- FEATURES -->
+
+        <section class="section" id="features">
+            <div class="container">
+
+                <div class="section-heading">
+                    <div class="eyebrow">Core capabilities</div>
+                    <h2>More clarity. Better preparation.</h2>
+                    <p>Understand the important details behind your job match.</p>
+                </div>
+
+                <div class="feature-grid">
+
+                    <div class="feature">
+                        <div class="feature-icon">◎</div>
+                        <h3>Skill Gap Detection</h3>
+                        <p>
+                            Identify which required skills you already have
+                            and which ones need more attention.
+                        </p>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">↗</div>
+                        <h3>Match Evaluation</h3>
+                        <p>
+                            Get a calculated skill match percentage
+                            based on the job requirements.
+                        </p>
+                    </div>
+
+                    <div class="feature">
+                        <div class="feature-icon">✦</div>
+                        <h3>AI Insights</h3>
+                        <p>
+                            Receive a personalised analysis with
+                            practical suggestions for improvement.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- WORKFLOW -->
+
+        <section class="section" id="how-it-works">
+            <div class="container">
+
+                <div class="section-heading">
+                    <div class="eyebrow">The process</div>
+                    <h2>Three steps. One clearer direction.</h2>
+                    <p>Here's what happens after you get started.</p>
+                </div>
+
+                <div class="workflow">
+
+                    <div class="workflow-item">
+                        <div class="workflow-number">01</div>
+                        <h3>Share your profile</h3>
+                        <p>
+                            Enter your technical skills, experience level,
+                            job description, and email address.
+                        </p>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-number">02</div>
+                        <h3>Let AI analyse</h3>
+                        <p>
+                            The automated workflow evaluates your profile
+                            and identifies relevant skill gaps.
+                        </p>
+                    </div>
+
+                    <div class="workflow-item">
+                        <div class="workflow-number">03</div>
+                        <h3>Receive your report</h3>
+                        <p>
+                            Get your match analysis and improvement
+                            recommendations through email.
+                        </p>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+    <div class="container">
+        <p class="footer-text">
+            AI Placement Opportunity Matcher · 2026
+        </p>
+    </div>
+</footer>
+
+</body>
+</html>
